@@ -1,5 +1,6 @@
-import { Button, Flex, Heading, Image } from '@chakra-ui/react';
-import React from 'react';
+import { Box, Button, Flex, Heading, Image } from '@chakra-ui/react';
+import React, { useState } from 'react';
+
 import { useHistory } from 'react-router-dom';
 
 interface IOption {
@@ -8,7 +9,7 @@ interface IOption {
   url: string;
 }
 
-const SideMenu: React.FC = () => {
+const TopMenu: React.FC = () => {
   const options: Array<IOption> = [
     { label: 'Pedidos', url: '/pedidos' },
     { label: 'Cliente', url: '/cliente' },
@@ -19,30 +20,30 @@ const SideMenu: React.FC = () => {
 
   return (
     <Flex
-      flexDir="column"
+      flexDir="row"
       alignItems="center"
-      w="20%"
-      h="100vh"
-      borderRightWidth="1px"
-      marginRight={14}
+      paddingTop={3}
+      paddingLeft={4}
+      paddingRight={4}
+      paddingBottom={3}
+      bg="gray.500"
     >
       <Image
-        w={20}
-        h={20}
-        marginTop={6}
-        marginBottom={1}
+        marginRight="auto"
+        w={12}
+        h={12}
         src={`${process.env.PUBLIC_URL}/crown.svg`}
       />
-      <Heading size="md" marginBottom={6}>
-        Palais de Fous
-      </Heading>
-      {options.map((item) => (
+
+      {options.map((item, idx) => (
         <Button
           bg="black.300"
-          borderBottom="1px"
-          borderRadius={0}
-          w="100%"
+          marginRight="auto"
+          _hover={{ background: 'gray.400' }}
           onClick={() => history.push(item.url)}
+          textColor={
+            history.location.pathname === item.url ? 'orange.400' : 'white'
+          }
         >
           {item.label}
         </Button>
@@ -51,4 +52,4 @@ const SideMenu: React.FC = () => {
   );
 };
 
-export default SideMenu;
+export default TopMenu;
