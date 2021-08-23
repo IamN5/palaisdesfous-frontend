@@ -3,7 +3,7 @@ import { Flex, SystemProps, Text } from '@chakra-ui/react';
 import { EmailIcon } from '@chakra-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { useUserContext } from '@context/userContext';
-import apiMock from '@services/apiMock';
+import api from '@services/api';
 import auth from '@services/authService';
 import SubmitButton from '../SubmitButton';
 import PasswordInput from '../PasswordInput';
@@ -23,8 +23,8 @@ const LoginForm: React.FC<ILoginForm> = ({ area }) => {
   const icon = useMemo(() => <EmailIcon />, []);
 
   const history = useHistory();
-  const onSubmit = () => {
-    const userData = apiMock.getUserData(user, password);
+  const onSubmit = async () => {
+    const userData = await api.getUserData(user, password);
 
     if (userData) {
       auth.login(userData, dispatch);

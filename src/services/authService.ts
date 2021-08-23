@@ -1,6 +1,7 @@
 import { disconnectUser, loginUser, UserAction } from '@actions/userActions';
 import { IUserState } from '@reducers/userReducer';
 import { Dispatch } from 'react';
+import apiInstance from './api';
 import STORAGE from './storageKeys';
 
 export const getUserData = () => {
@@ -9,7 +10,15 @@ export const getUserData = () => {
   return userData ? JSON.parse(userData) : null;
 };
 
-export const isAuthenticated = () => getUserData() !== null;
+export const isAuthenticated = () => {
+  const authenticated = getUserData() !== null;
+  if (authenticated) {
+    apiInstance.api.defaults.headers.Authorization = `Bearer ${
+      getUserData().token
+    }`;
+  }
+  return authenticated;
+};
 
 export const isAdmin = () => getUserData().auth === 'admin';
 
