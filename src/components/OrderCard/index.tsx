@@ -1,8 +1,21 @@
 import { CheckIcon } from '@chakra-ui/icons';
-import { Box, Flex, Heading, IconButton, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Heading,
+  IconButton,
+  ListItem,
+  Text,
+  UnorderedList,
+} from '@chakra-ui/react';
 import React from 'react';
+import { IOrder } from '@interfaces/index';
 
-const OrderCard: React.FC = () => {
+interface IOrderCard {
+  order: IOrder;
+}
+
+const OrderCard: React.FC<IOrderCard> = ({ order }) => {
   return (
     <Flex
       h="7rem"
@@ -11,12 +24,26 @@ const OrderCard: React.FC = () => {
       marginBottom={2}
       direction="column"
       alignItems="center"
-      bg="gray.300"
+      bg="orange.400"
     >
-      <Flex w="100%" direction="row" justifyContent="center">
-        <Heading d="inline" fontSize="2xl">
-          Card title
-        </Heading>
+      <Heading fontSize="2xl">{`Pedido ${order.id}`}</Heading>
+      <UnorderedList>
+        {order.products.map((wrapper) => (
+          <ListItem
+            key={wrapper.product.name}
+          >{`${wrapper.quantity}x - ${wrapper.product.name}`}</ListItem>
+        ))}
+      </UnorderedList>
+      <Flex
+        flex="1"
+        w="100%"
+        justifyContent="space-between"
+        alignItems="flex-end"
+      >
+        <Text
+          d="inline-flex"
+          marginLeft={2}
+        >{`customer.${order.customer.cpf}.${order.customer.name}`}</Text>
         <IconButton
           colorScheme="green"
           aria-label="Push to in progress"
@@ -25,8 +52,6 @@ const OrderCard: React.FC = () => {
           size="sm"
         />
       </Flex>
-      <Text>content</Text>
-      <Text>rest</Text>
     </Flex>
   );
 };
