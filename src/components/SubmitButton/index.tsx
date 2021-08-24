@@ -6,16 +6,18 @@ interface ISubmitButton {
   onClick?: () => void;
   color?: string;
   props: ButtonProps;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SubmitButton: React.FC<ISubmitButton> = ({
   text,
   onClick,
   color = 'orange',
+  loading,
+  setLoading,
   props,
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-
   const handleClick = () => {
     setLoading(!loading);
 

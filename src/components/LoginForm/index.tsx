@@ -17,6 +17,7 @@ const LoginForm: React.FC<ILoginForm> = ({ area }) => {
   const [user, setUser] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { dispatch } = useUserContext();
 
@@ -32,6 +33,7 @@ const LoginForm: React.FC<ILoginForm> = ({ area }) => {
     }
 
     setError('Wrong user/password combination');
+    setLoading(false);
   };
 
   return (
@@ -56,6 +58,8 @@ const LoginForm: React.FC<ILoginForm> = ({ area }) => {
       <SubmitButton
         text="Login"
         onClick={onSubmit}
+        loading={loading}
+        setLoading={setLoading}
         props={{ marginTop: 24, w: '70%', loadingText: 'Logging in' }}
       />
 
