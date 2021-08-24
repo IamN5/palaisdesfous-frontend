@@ -33,3 +33,16 @@ export interface IOrder {
   customer: ICustomer;
   products: IProductWrapper[];
 }
+
+export enum NotificationTypes {
+  NOTIFICATION_SUCCESS = 'notification/success',
+  NOTIFICATION_ERROR = 'notification/error',
+  NOTIFICATION_NEUTRAL = 'notification/neutral',
+  NOTIFICATION_NONE = 'notification/none',
+}
+
+export interface INotification {
+  readonly type: NotificationTypes;
+  title: string;
+  message: string;
+}

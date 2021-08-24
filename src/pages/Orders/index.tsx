@@ -4,9 +4,15 @@ import React, { useEffect } from 'react';
 import OrderList from '@components/OrderList';
 import { useOrdersContext } from '@context/ordersContext';
 import { setOrders } from '@actions/orderActions';
+import { useNotificationContext } from '@context/notificationContext';
+import {
+  createRequestError,
+  sendNotification,
+} from '@actions/notificationActions';
 
 const Orders: React.FC = () => {
   const { state, dispatch } = useOrdersContext();
+  const notify = useNotificationContext().dispatch;
 
   useEffect(() => {
     const getData = async () => {
@@ -15,7 +21,9 @@ const Orders: React.FC = () => {
       return data;
     };
 
-    getData().then((data) => dispatch(setOrders({ orders: data })));
+    getData()
+      .then((data) => dispatch(setOrders({ orders: data })))
+      .catch((error) => notify(sendNotification(createRequestError(error))));
   }, []);
 
   return (

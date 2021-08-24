@@ -14,6 +14,14 @@ import { useDrag } from 'react-dnd';
 import { useOrdersContext } from '@context/ordersContext';
 import { pushOrder } from '@actions/orderActions';
 import api from '@services/api';
+import {
+  useNotificationContext,
+  useNotify,
+} from '@context/notificationContext';
+import {
+  createRequestError,
+  sendNotification,
+} from '@actions/notificationActions';
 
 interface IOrderCard {
   order: IOrder;
@@ -25,17 +33,26 @@ interface IDroppable {
 
 const OrderCard: React.FC<IOrderCard> = ({ order }) => {
   const { state, dispatch } = useOrdersContext();
+  const { notify } = useNotify();
+
   const canDrag = !state.inProgressOrders.includes(order);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'card',
     item: order,
     canDrag: () => canDrag,
-    end: (item, monitor) => {
+    end: async (item, monitor) => {
       const dropResult = monitor.getDropResult<IDroppable>();
 
       if (item && dropResult?.droppable) {
-        if (api.pushOrder(order) != null) dispatch(pushOrder({ order: item }));
+        try {
+          const response = await api.pushOrder(order);
+          console.log(`Order push response is ${response}`);
+
+          if (response != null) dispatch(pushOrder({ order: item }));
+        } catch (error) {
+          notify(sendNotification(createRequestError(error)));
+        }
       }
     },
     collect: (monitor) => ({

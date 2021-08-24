@@ -1,4 +1,9 @@
+import {
+  createNotification,
+  sendNotification,
+} from '@actions/notificationActions';
 import { Box, Button, Flex, Heading, Image } from '@chakra-ui/react';
+import { useNotificationContext } from '@context/notificationContext';
 import React, { useState } from 'react';
 
 import { useHistory } from 'react-router-dom';
@@ -6,17 +11,38 @@ import { useHistory } from 'react-router-dom';
 interface IOption {
   label: string;
   auth?: string;
-  url: string;
+  url?: string;
+  action?: () => void;
 }
 
 const TopMenu: React.FC = () => {
+  const { dispatch } = useNotificationContext();
+
   const options: Array<IOption> = [
     { label: 'Pedidos', url: '/pedidos' },
     { label: 'Cliente', url: '/cliente' },
     { label: 'Funcionários', auth: 'admin', url: '/funcionarios' },
+    {
+      label: 'teste',
+      action: () =>
+        dispatch(
+          sendNotification(
+            createNotification(
+              'ola',
+              'shaoidhoashdoashdohasodha sohdoasihdoashodhaosihdo aishodiansodnasjn dkajsndlasnodijasoijd'
+            )
+          )
+        ),
+    },
   ];
 
   const history = useHistory();
+
+  const handleClick = (item: IOption) => {
+    item.action?.call(this);
+
+    if (item.url) history.push(item.url);
+  };
 
   return (
     <Flex
@@ -41,7 +67,7 @@ const TopMenu: React.FC = () => {
           bg="black.300"
           marginRight="auto"
           _hover={{ background: 'gray.400' }}
-          onClick={() => history.push(item.url)}
+          onClick={() => handleClick(item)}
           textColor={
             history.location.pathname === item.url ? 'orange.400' : 'white'
           }
