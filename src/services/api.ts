@@ -1,6 +1,7 @@
 import { IOrder, OrderStatus } from '@interfaces/index';
 import axios from 'axios';
 import authService from './authService';
+import { orderToDto } from './mapper';
 
 export const api = axios.create({
   baseURL: 'http://localhost:8080',
@@ -83,14 +84,19 @@ export const getOrders = async () => {
 };
 
 export const pushOrder = async (order: IOrder) => {
-  const newOrder = order;
+  const newOrder = { ...order };
+
+  console.log(`Order status is ${order.status}`);
 
   if (order.status !== OrderStatus.ToDo) return null;
 
   newOrder.status = OrderStatus.InProgress;
 
   try {
-    const response = await api.patch(`/orders/patch/${order.id}`);
+    const response = await api.patch(
+      `/orders/patch/${order.id}`,
+      orderToDto(newOrder)
+    );
 
     return response.data;
   } catch (error) {
