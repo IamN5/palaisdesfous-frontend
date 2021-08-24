@@ -37,6 +37,7 @@ const TopMenu: React.FC = () => {
 
       {options.map((item, idx) => (
         <Button
+          key={item.label}
           bg="black.300"
           marginRight="auto"
           _hover={{ background: 'gray.400' }}

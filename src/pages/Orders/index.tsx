@@ -1,12 +1,12 @@
-import { Flex, Heading, Text } from '@chakra-ui/react';
-import OrderCard from '@components/OrderCard';
+import { Flex } from '@chakra-ui/react';
 import api from '@services/api';
-import React, { useState, useEffect } from 'react';
-
-import { IOrder, OrderStatus } from '@interfaces/index';
+import React, { useEffect } from 'react';
+import OrderList from '@components/OrderList';
+import { useOrdersContext } from '@context/ordersContext';
+import { setOrders } from '@actions/orderActions';
 
 const Orders: React.FC = () => {
-  const [orders, setOrders] = useState<IOrder[]>([]);
+  const { state, dispatch } = useOrdersContext();
 
   useEffect(() => {
     const getData = async () => {
@@ -15,32 +15,18 @@ const Orders: React.FC = () => {
       return data;
     };
 
-    getData().then((data) => setOrders(data));
+    getData().then((data) => dispatch(setOrders({ orders: data })));
   }, []);
 
   return (
     <>
       <Flex direction="row" justifyContent="space-evenly">
-        <Flex direction="column" alignItems="center">
-          <Heading marginBottom={4} size="lg">
-            To do
-          </Heading>
-          {orders
-            .filter((order) => order.status === OrderStatus.ToDo)
-            .map((item) => (
-              <OrderCard key={item.id} order={item} />
-            ))}
-        </Flex>
-        <Flex direction="column" alignItems="center">
-          <Heading marginBottom={4} size="lg">
-            In Progress
-          </Heading>
-          {orders
-            .filter((order) => order.status === OrderStatus.InProgress)
-            .map((item) => (
-              <OrderCard key={item.id} order={item} />
-            ))}
-        </Flex>
+        <OrderList title="To do" orders={state.toDoOrders} />
+        <OrderList
+          title="In Progress"
+          orders={state.inProgressOrders}
+          droppable
+        />
       </Flex>
     </>
   );
