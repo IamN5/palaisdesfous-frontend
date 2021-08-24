@@ -1,5 +1,6 @@
 import { Button, Flex, Image } from '@chakra-ui/react';
-import useNotification from '@hooks/useNotification';
+import { useUserContext } from '@context/userContext';
+import authService from '@services/authService';
 import React from 'react';
 
 import { useHistory } from 'react-router-dom';
@@ -12,15 +13,16 @@ interface IOption {
 }
 
 const TopMenu: React.FC = () => {
-  const { createNotification } = useNotification();
+  const { dispatch } = useUserContext();
 
   const options: Array<IOption> = [
     { label: 'Pedidos', url: '/pedidos' },
     { label: 'Cliente', url: '/cliente' },
     { label: 'Funcionários', auth: 'admin', url: '/funcionarios' },
     {
-      label: 'teste',
-      action: () => createNotification('ola', 'arrombado'),
+      label: 'Logout',
+      url: '/',
+      action: () => authService.logout(dispatch),
     },
   ];
 
