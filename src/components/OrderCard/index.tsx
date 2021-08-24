@@ -1,27 +1,11 @@
-import { CheckIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Flex,
-  Heading,
-  IconButton,
-  ListItem,
-  Text,
-  UnorderedList,
-} from '@chakra-ui/react';
+import { Flex, Heading, ListItem, Text, UnorderedList } from '@chakra-ui/react';
 import React from 'react';
 import { IOrder } from '@interfaces/index';
 import { useDrag } from 'react-dnd';
 import { useOrdersContext } from '@context/ordersContext';
 import { pushOrder } from '@actions/orderActions';
 import api from '@services/api';
-import {
-  useNotificationContext,
-  useNotify,
-} from '@context/notificationContext';
-import {
-  createRequestError,
-  sendNotification,
-} from '@actions/notificationActions';
+import useNotification from '@hooks/useNotification';
 
 interface IOrderCard {
   order: IOrder;
@@ -33,7 +17,7 @@ interface IDroppable {
 
 const OrderCard: React.FC<IOrderCard> = ({ order }) => {
   const { state, dispatch } = useOrdersContext();
-  const { notify } = useNotify();
+  const { createRequestError } = useNotification();
 
   const canDrag = !state.inProgressOrders.includes(order);
 
@@ -51,7 +35,7 @@ const OrderCard: React.FC<IOrderCard> = ({ order }) => {
 
           if (response != null) dispatch(pushOrder({ order: item }));
         } catch (error) {
-          notify(sendNotification(createRequestError(error)));
+          createRequestError(error);
         }
       }
     },

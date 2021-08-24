@@ -1,10 +1,6 @@
-import {
-  createNotification,
-  sendNotification,
-} from '@actions/notificationActions';
-import { Box, Button, Flex, Heading, Image } from '@chakra-ui/react';
-import { useNotificationContext } from '@context/notificationContext';
-import React, { useState } from 'react';
+import { Button, Flex, Image } from '@chakra-ui/react';
+import useNotification from '@hooks/useNotification';
+import React from 'react';
 
 import { useHistory } from 'react-router-dom';
 
@@ -16,7 +12,7 @@ interface IOption {
 }
 
 const TopMenu: React.FC = () => {
-  const { dispatch } = useNotificationContext();
+  const { createNotification } = useNotification();
 
   const options: Array<IOption> = [
     { label: 'Pedidos', url: '/pedidos' },
@@ -24,15 +20,7 @@ const TopMenu: React.FC = () => {
     { label: 'Funcionários', auth: 'admin', url: '/funcionarios' },
     {
       label: 'teste',
-      action: () =>
-        dispatch(
-          sendNotification(
-            createNotification(
-              'ola',
-              'shaoidhoashdoashdohasodha sohdoasihdoashodhaosihdo aishodiansodnasjn dkajsndlasnodijasoijd'
-            )
-          )
-        ),
+      action: () => createNotification('ola', 'arrombado'),
     },
   ];
 
@@ -61,7 +49,7 @@ const TopMenu: React.FC = () => {
         src={`${process.env.PUBLIC_URL}/crown.svg`}
       />
 
-      {options.map((item, idx) => (
+      {options.map((item) => (
         <Button
           key={item.label}
           bg="black.300"

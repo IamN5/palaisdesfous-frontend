@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { memo } from 'react';
 import { Button, ButtonProps } from '@chakra-ui/react';
 
 interface ISubmitButton {
