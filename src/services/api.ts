@@ -1,3 +1,4 @@
+import { IOrder, OrderStatus } from '@interfaces/index';
 import axios from 'axios';
 
 export const api = axios.create({
@@ -41,8 +42,27 @@ export const getOrders = async () => {
   return null;
 };
 
+export const pushOrder = async (order: IOrder) => {
+  const newOrder = order;
+
+  if (order.status !== OrderStatus.ToDo) return null;
+
+  newOrder.status = OrderStatus.InProgress;
+
+  try {
+    const response = await api.patch(`/orders/patch/${order.id}`);
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+
+  return null;
+};
+
 export default {
   api,
   getUserData,
   getOrders,
+  pushOrder,
 };
