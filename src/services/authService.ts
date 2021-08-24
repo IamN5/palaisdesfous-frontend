@@ -12,6 +12,7 @@ export const getUserData = () => {
 
 export const isAuthenticated = () => {
   const authenticated = getUserData() !== null;
+
   if (authenticated) {
     apiInstance.api.defaults.headers.Authorization = `Bearer ${
       getUserData().token
@@ -22,17 +23,28 @@ export const isAuthenticated = () => {
 
 export const isAdmin = () => getUserData().auth === 'admin';
 
+export const getRefreshToken = () => getUserData().refreshToken;
+
+export const refreshTokens = (token: string, refreshToken: string) => {
+  const { user, auth } = getUserData();
+
+  localStorage.setItem(
+    STORAGE.USER_DATA_KEY,
+    JSON.stringify({ user, auth, token, refreshToken })
+  );
+};
+
 export const login = (
   userState: IUserState,
   dispatch: Dispatch<UserAction>
 ) => {
-  const { user, auth, token } = userState;
+  const { user, auth, token, refreshToken } = userState;
 
-  dispatch(loginUser({ user, auth, token }));
+  dispatch(loginUser({ user, auth, token, refreshToken }));
 
   localStorage.setItem(
     STORAGE.USER_DATA_KEY,
-    JSON.stringify({ user, auth, token })
+    JSON.stringify({ user, auth, token, refreshToken })
   );
 };
 
@@ -46,6 +58,8 @@ export default {
   isAdmin,
   isAuthenticated,
   getUserData,
+  getRefreshToken,
+  refreshTokens,
   login,
   logout,
 };
