@@ -1,30 +1,36 @@
-import { Flex, Heading, Text } from '@chakra-ui/react';
-import OrderCard from '@components/OrderCard';
-import React from 'react';
+import { Flex } from '@chakra-ui/react';
+import api from '@services/api';
+import React, { useEffect } from 'react';
+import OrderList from '@components/OrderList';
+import { useOrdersContext } from '@context/ordersContext';
+import { setOrders } from '@actions/orderActions';
+import useNotification from '@hooks/useNotification';
 
 const Orders: React.FC = () => {
-  const toDoOrders: string[] = ['um', 'dois'];
-  const inProgressOrder: string[] = ['nah'];
-  const doneOrders = [];
+  const { state, dispatch } = useOrdersContext();
+  const { createRequestError } = useNotification();
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await api.getOrders();
+
+      return data;
+    };
+
+    getData()
+      .then((data) => dispatch(setOrders({ orders: data })))
+      .catch((error) => createRequestError(error));
+  }, []);
 
   return (
     <>
-      <Heading w="100%" textAlign="center">
-        Pedidos
-      </Heading>
       <Flex direction="row" justifyContent="space-evenly">
-        <Flex direction="column" alignItems="center">
-          <Text fontSize="lg">To do</Text>
-          {toDoOrders.map((item) => (
-            <OrderCard />
-          ))}
-        </Flex>
-        <Flex direction="column" alignItems="center">
-          <Text fontSize="lg">In Progress</Text>
-          {inProgressOrder.map((item) => (
-            <OrderCard />
-          ))}
-        </Flex>
+        <OrderList title="To do" orders={state.toDoOrders} />
+        <OrderList
+          title="In Progress"
+          orders={state.inProgressOrders}
+          droppable
+        />
       </Flex>
     </>
   );
