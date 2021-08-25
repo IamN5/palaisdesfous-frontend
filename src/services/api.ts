@@ -1,4 +1,4 @@
-import { IOrder, OrderStatus } from '@interfaces/index';
+import { IOrder, ICustomer, OrderStatus } from '@interfaces/index';
 import axios from 'axios';
 import authService from './authService';
 import { orderToDto } from './mapper';
@@ -109,9 +109,40 @@ export const pushOrder = async (order: IOrder) => {
   return null;
 };
 
+export const registerCustomer = async (cpf: string, name: string) => {
+  try {
+    const response = await api.post('/customers/create', {
+      cpf,
+      name,
+    });
+    return response;
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      registerCustomer(cpf, name);
+    });
+  }
+  return null;
+};
+
+export const getCustomers = async () => {
+  try {
+    const response = await api.get<ICustomer[]>('/customers/');
+    return response.data;
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      getCustomers();
+    });
+  }
+  return null;
+};
+
 export default {
   api,
   getUserData,
   getOrders,
   pushOrder,
+  registerCustomer,
+  getCustomers,
 };

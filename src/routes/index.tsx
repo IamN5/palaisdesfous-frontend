@@ -1,3 +1,4 @@
+import Customer from '@pages/Customer';
 import Home from '@pages/Home';
 import Login from '@pages/Login';
 import NotFound from '@pages/NotFound';
@@ -22,6 +23,11 @@ const Routes: React.FC = () => {
       <AuthRoute path="/pedidos">
         <Home>
           <Orders />
+        </Home>
+      </AuthRoute>
+      <AuthRoute path="/cliente">
+        <Home>
+          <Customer />
         </Home>
       </AuthRoute>
       <Route path="*">
