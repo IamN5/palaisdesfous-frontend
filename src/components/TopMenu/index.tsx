@@ -19,6 +19,7 @@ const TopMenu: React.FC = () => {
   const options: Array<IOption> = [
     { label: 'Pedidos', auth: 'cook', url: '/pedidos' },
     { label: 'Clientes', auth: 'waiter', url: '/clientes' },
+    { label: 'Produtos', auth: 'cook', url: '/produtos' },
     { label: 'Funcionários', auth: 'admin', url: '/funcionarios' },
     { label: 'Ingredientes', auth: 'admin', url: '/ingredientes' },
     {

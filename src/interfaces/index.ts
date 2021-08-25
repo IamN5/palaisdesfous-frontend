@@ -17,8 +17,11 @@ export interface IUser {
 }
 
 export interface IIngredient {
-  name: string;
-  stock: number;
+  ingredient: {
+    name: string;
+    quantity: number;
+  };
+  quantity: number;
 }
 
 export interface IIngredientDto {
@@ -30,7 +33,7 @@ export interface IProduct {
   name: string;
   price: number;
   ingredients: IIngredient[];
-  quantity: number;
+  // quantity: number;
 }
 
 export interface IProductWrapper {
