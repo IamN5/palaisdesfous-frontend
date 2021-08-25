@@ -4,6 +4,7 @@ import {
   OrderStatus,
   IIngredient,
   IIngredientDto,
+  IUser,
 } from '@interfaces/index';
 import axios from 'axios';
 import authService from './authService';
@@ -184,6 +185,44 @@ export const patchIngredient = async (ingredient: IIngredient) => {
   return null;
 };
 
+export const registerUser = async (
+  cpf: string,
+  name: string,
+  email: string,
+  auth: string,
+  password: string
+) => {
+  try {
+    const response = await api.post('/users/create', {
+      cpf,
+      name,
+      email,
+      auth,
+      password,
+    });
+    return response;
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      registerUser(cpf, name, email, auth, password);
+    });
+  }
+  return null;
+};
+
+export const getUsers = async () => {
+  try {
+    const response = await api.get<IUser[]>('/users/');
+    return response.data;
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      getUsers();
+    });
+  }
+  return null;
+};
+
 export default {
   api,
   getUserData,
@@ -193,4 +232,6 @@ export default {
   getCustomers,
   getIngredients,
   patchIngredient,
+  registerUser,
+  getUsers,
 };

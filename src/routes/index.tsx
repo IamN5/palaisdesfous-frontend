@@ -4,6 +4,7 @@ import Ingredients from '@pages/Ingredients';
 import Login from '@pages/Login';
 import NotFound from '@pages/NotFound';
 import Orders from '@pages/Orders';
+import Users from '@pages/Users';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import AdminRoute from './AdminRoute';
@@ -26,9 +27,14 @@ const Routes: React.FC = () => {
           <Orders />
         </Home>
       </AuthRoute>
-      <AdminRoute path="/cliente">
+      <AuthRoute path="/clientes">
         <Home>
           <Customer />
+        </Home>
+      </AuthRoute>
+      <AdminRoute path="/funcionarios">
+        <Home>
+          <Users />
         </Home>
       </AdminRoute>
       <AdminRoute path="/ingredientes">

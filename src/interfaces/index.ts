@@ -9,6 +9,13 @@ export interface ICustomer {
   name: string;
 }
 
+export interface IUser {
+  cpf: string;
+  name: string;
+  email: string;
+  auth: string;
+}
+
 export interface IIngredient {
   name: string;
   stock: number;
