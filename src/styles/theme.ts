@@ -18,6 +18,13 @@ const override: ThemeOverride = {
         },
       }),
     },
+    Select: {
+      baseStyle: () => ({
+        '> option': {
+          bg: '#3d3d3d',
+        },
+      }),
+    },
   },
   colors: {
     gray: {
