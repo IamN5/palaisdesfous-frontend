@@ -1,7 +1,18 @@
-import { IOrder, ICustomer, OrderStatus } from '@interfaces/index';
+import {
+  IOrder,
+  ICustomer,
+  OrderStatus,
+  IIngredient,
+  IIngredientDto,
+} from '@interfaces/index';
 import axios from 'axios';
 import authService from './authService';
-import { orderToDto } from './mapper';
+import {
+  ingredientFromDto,
+  ingredientsArrayFromDto,
+  ingredientToDto,
+  orderToDto,
+} from './mapper';
 
 export const api = axios.create({
   baseURL: 'http://localhost:8080',
@@ -86,8 +97,6 @@ export const getOrders = async () => {
 export const pushOrder = async (order: IOrder) => {
   const newOrder = { ...order };
 
-  console.log(`Order status is ${order.status}`);
-
   if (order.status === OrderStatus.Done) return null;
 
   if (newOrder.status === OrderStatus.InProgress) {
@@ -142,6 +151,39 @@ export const getCustomers = async () => {
   return null;
 };
 
+export const getIngredients = async () => {
+  try {
+    const response = await api.get<IIngredientDto[]>('/ingredients/');
+
+    return ingredientsArrayFromDto(response.data);
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      getIngredients();
+    });
+  }
+
+  return null;
+};
+
+export const patchIngredient = async (ingredient: IIngredient) => {
+  try {
+    const response = await api.patch<IIngredientDto>(
+      '/ingredients/patch',
+      ingredientToDto(ingredient)
+    );
+
+    return ingredientFromDto(response.data);
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      patchIngredient(ingredient);
+    });
+  }
+
+  return null;
+};
+
 export default {
   api,
   getUserData,
@@ -149,4 +191,6 @@ export default {
   pushOrder,
   registerCustomer,
   getCustomers,
+  getIngredients,
+  patchIngredient,
 };
