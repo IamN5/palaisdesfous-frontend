@@ -32,7 +32,7 @@ const OrderList: React.FC<IOrderList> = ({
         {title}
       </Heading>
       {orders.map((item) => (
-        <OrderCard key={item.id} order={item} />
+        <OrderCard key={item.id} order={item} doneButton={droppable} />
       ))}
     </Flex>
   );

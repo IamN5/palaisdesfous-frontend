@@ -14,7 +14,14 @@ export interface IPushOrder {
   payload: { order: IOrder };
 }
 
-export type OrderAction = ISetOrders | IPushOrder;
+export const FINISH_ORDER = 'orders/finish';
+
+export interface IFinishOrder {
+  readonly type: typeof FINISH_ORDER;
+  payload: { order: IOrder };
+}
+
+export type OrderAction = ISetOrders | IPushOrder | IFinishOrder;
 
 export const setOrders = (payload: { orders: IOrder[] }): ISetOrders => ({
   type: SET_ORDERS,
@@ -23,5 +30,10 @@ export const setOrders = (payload: { orders: IOrder[] }): ISetOrders => ({
 
 export const pushOrder = (payload: { order: IOrder }): IPushOrder => ({
   type: PUSH_ORDER,
+  payload,
+});
+
+export const finishOrder = (payload: { order: IOrder }): IFinishOrder => ({
+  type: FINISH_ORDER,
   payload,
 });
