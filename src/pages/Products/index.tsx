@@ -11,21 +11,29 @@ import {
   ModalFooter,
   Heading,
   Text,
+  Input,
+  NumberInput,
+  NumberInputField,
+  Select,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import SubmitButton from '@components/SubmitButton';
 import TextInput from '@components/TextInput';
 import useNotification from '@hooks/useNotification';
-import api, { registerCustomer } from '@services/api';
-import { ICustomer } from '@interfaces/index';
+import api, { registerProduct } from '@services/api';
+import { IIngredient, IProduct } from '@interfaces/index';
 import React, { useEffect, useMemo, useState } from 'react';
 import Card from '@components/Card';
 
-const Customer: React.FC = () => {
+const Products: React.FC = () => {
   const [name, setName] = useState<string>('');
-  const [cpf, setCpf] = useState<string>('');
+  const [price, setPrice] = useState<number>(0);
+  const [ingredients, setIngredients] = useState<IIngredient[]>(
+    [] as IIngredient[]
+  );
+  const [ingredientName, setIngredientName] = useState<string>('');
+  const [products, setProducts] = useState<IProduct[]>([] as IProduct[]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [customers, setCustomers] = useState<ICustomer[]>([] as ICustomer[]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -33,11 +41,11 @@ const Customer: React.FC = () => {
 
   const addIcon = useMemo(() => <AddIcon />, []);
 
-  const getCustomers = async () => {
+  const getProducts = async () => {
     try {
-      const data = await api.getCustomers();
+      const data = await api.getProducts();
       if (data) {
-        setCustomers(data);
+        setProducts(data);
       }
     } catch (error) {
       createRequestError(error);
@@ -47,11 +55,12 @@ const Customer: React.FC = () => {
   const handleSubmit = async () => {
     onClose();
     try {
-      const response = await registerCustomer(cpf, name);
+      const response = await registerProduct(name, price, ingredients);
       if (response) {
         setName('');
-        setCpf('');
-        getCustomers();
+        setPrice(0);
+        setIngredients([]);
+        getProducts();
       }
     } catch (error) {
       createRequestError(error);
@@ -60,28 +69,33 @@ const Customer: React.FC = () => {
   };
 
   useEffect(() => {
-    getCustomers();
+    getProducts();
   }, []);
 
   return (
     <>
       <Flex flexDir="column" alignItems="center" marginLeft={12}>
         <Flex>
-          <Heading marginBottom={12}>Lista de clientes</Heading>
+          <Heading marginBottom={12}>Lista de produtos</Heading>
           <Button
             leftIcon={addIcon}
             colorScheme="orange"
             onClick={onOpen}
             marginLeft={16}
           >
-            Cadastrar cliente
+            Cadastrar produto
           </Button>
         </Flex>
         <Flex flexWrap="wrap" marginInline={16}>
-          {customers.map((item) => {
+          {products.map((item) => {
             return (
-              <Card key={item.cpf} title={item.name}>
-                <Text>CPF: {item.cpf}</Text>
+              <Card key={item.name} title={item.name}>
+                {item.ingredients.map((ingredient) => (
+                  <Text>
+                    {ingredient.ingredient.name}: {ingredient.quantity}
+                  </Text>
+                ))}
+                <Text>R$ {item.price}</Text>
               </Card>
             );
           })}
@@ -91,7 +105,7 @@ const Customer: React.FC = () => {
       <Modal isCentered isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader textAlign="center">Cadastrar cliente</ModalHeader>
+          <ModalHeader textAlign="center">Cadastrar produto</ModalHeader>
           <ModalCloseButton />
           <ModalBody marginInline={8}>
             <TextInput
@@ -100,12 +114,34 @@ const Customer: React.FC = () => {
               value={name}
               setValue={setName}
             />
-            <TextInput
+            <NumberInput>
+              <NumberInputField
+                width="100%"
+                placeholder="Preço"
+                backgroundColor="gray.800"
+                value={price}
+                onChange={(event) => setPrice(event.target.valueAsNumber)}
+              />
+            </NumberInput>
+            <Select
+              bg="gray.800"
+              color="gray.500"
+              size="lg"
               width="100%"
-              placeholder="CPF"
-              value={cpf}
-              setValue={setCpf}
-            />
+              focusBorderColor="orange.400"
+              variant="outline"
+              placeholder="Selecione o ingrediente"
+              value={ingredientName}
+              onChange={(event) => setIngredientName(event.target.value)}
+            >
+              {/* {products.map((item) =>
+                item.ingredients.map((ingredient: any) => (
+                  <option value={ingredient.ingredient.name}>
+                    {ingredient.name}
+                  </option>
+                ))
+              )} */}
+            </Select>
           </ModalBody>
           <ModalFooter>
             <SubmitButton
@@ -127,4 +163,4 @@ const Customer: React.FC = () => {
   );
 };
 
-export default Customer;
+export default Products;

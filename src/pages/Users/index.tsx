@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   useDisclosure,
   Button,
@@ -21,6 +20,7 @@ import useNotification from '@hooks/useNotification';
 import api, { registerUser } from '@services/api';
 import { IUser } from '@interfaces/index';
 import React, { useEffect, useMemo, useState } from 'react';
+import Card from '@components/Card';
 
 const Users: React.FC = () => {
   const [name, setName] = useState<string>('');
@@ -88,19 +88,7 @@ const Users: React.FC = () => {
         <Flex flexWrap="wrap" marginInline={16}>
           {users.map((item) => {
             return (
-              <Box
-                key={item.cpf}
-                w="300px"
-                bg="orange.800"
-                p="6"
-                borderRadius="md"
-                marginBottom={8}
-                marginRight={8}
-                boxShadow="lg"
-              >
-                <Text fontSize="20px" fontWeight="bold" casing="capitalize">
-                  {item.name}
-                </Text>
+              <Card key={item.cpf} title={item.name}>
                 <Text>CPF: {item.cpf}</Text>
                 <Text>{item.email}</Text>
                 <Text
@@ -112,19 +100,13 @@ const Users: React.FC = () => {
                 >
                   {item.auth}
                 </Text>
-              </Box>
+              </Card>
             );
           })}
         </Flex>
       </Flex>
 
-      <Modal
-        isCentered
-        isOpen={isOpen}
-        onClose={onClose}
-        size="lg"
-        colorScheme="teal"
-      >
+      <Modal isCentered isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader textAlign="center">Cadastrar funcionário</ModalHeader>
