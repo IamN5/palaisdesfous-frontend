@@ -100,14 +100,30 @@ const Customer: React.FC = () => {
         </Flex>
       </Flex>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="lg" colorScheme="teal">
+      <Modal
+        isCentered
+        isOpen={isOpen}
+        onClose={onClose}
+        size="lg"
+        colorScheme="teal"
+      >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Cadastrar cliente</ModalHeader>
+          <ModalHeader textAlign="center">Cadastrar cliente</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
-            <TextInput placeholder="Nome" value={name} setValue={setName} />
-            <TextInput placeholder="CPF" value={cpf} setValue={setCpf} />
+          <ModalBody marginInline={8}>
+            <TextInput
+              width="100%"
+              placeholder="Nome"
+              value={name}
+              setValue={setName}
+            />
+            <TextInput
+              width="100%"
+              placeholder="CPF"
+              value={cpf}
+              setValue={setCpf}
+            />
           </ModalBody>
           <ModalFooter>
             <SubmitButton
@@ -115,7 +131,12 @@ const Customer: React.FC = () => {
               onClick={handleSubmit}
               loading={loading}
               setLoading={setLoading}
-              props={{ marginTop: 8, w: '70%', loadingText: 'Cadastrando' }}
+              props={{
+                marginTop: 4,
+                marginInline: 8,
+                w: '100%',
+                loadingText: 'Cadastrando',
+              }}
             />
           </ModalFooter>
         </ModalContent>
