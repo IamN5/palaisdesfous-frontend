@@ -21,6 +21,11 @@ export interface IIngredient {
   stock: number;
 }
 
+export interface IIngredientDto {
+  name: string;
+  quantity: number;
+}
+
 export interface IProduct {
   name: string;
   price: number;

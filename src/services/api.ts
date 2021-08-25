@@ -1,7 +1,19 @@
-import { IOrder, ICustomer, OrderStatus, IUser } from '@interfaces/index';
+import {
+  IOrder,
+  ICustomer,
+  OrderStatus,
+  IIngredient,
+  IIngredientDto,
+  IUser,
+} from '@interfaces/index';
 import axios from 'axios';
 import authService from './authService';
-import { orderToDto } from './mapper';
+import {
+  ingredientFromDto,
+  ingredientsArrayFromDto,
+  ingredientToDto,
+  orderToDto,
+} from './mapper';
 
 export const api = axios.create({
   baseURL: 'http://localhost:8080',
@@ -86,8 +98,6 @@ export const getOrders = async () => {
 export const pushOrder = async (order: IOrder) => {
   const newOrder = { ...order };
 
-  console.log(`Order status is ${order.status}`);
-
   if (order.status === OrderStatus.Done) return null;
 
   if (newOrder.status === OrderStatus.InProgress) {
@@ -142,6 +152,72 @@ export const getCustomers = async () => {
   return null;
 };
 
+export const getIngredients = async () => {
+  try {
+    const response = await api.get<IIngredientDto[]>('/ingredients/');
+
+    return ingredientsArrayFromDto(response.data);
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      getIngredients();
+    });
+  }
+
+  return null;
+};
+
+export const patchIngredient = async (ingredient: IIngredient) => {
+  try {
+    const response = await api.patch<IIngredientDto>(
+      '/ingredients/patch',
+      ingredientToDto(ingredient)
+    );
+
+    return ingredientFromDto(response.data);
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      patchIngredient(ingredient);
+    });
+  }
+
+  return null;
+};
+
+export const createIngredient = async (ingredient: IIngredient) => {
+  try {
+    const response = await api.post(
+      'ingredients/create',
+      ingredientToDto(ingredient)
+    );
+
+    return ingredientFromDto(response.data);
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      createIngredient(ingredient);
+    });
+  }
+
+  return null;
+};
+
+export const deleteIngredient = async (ingredient: IIngredient) => {
+  try {
+    const response = await api.delete(`/ingredients/delete/${ingredient.name}`);
+
+    return ingredientFromDto(response.data);
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      createIngredient(ingredient);
+    });
+  }
+
+  return null;
+};
+
 export const registerUser = async (
   cpf: string,
   name: string,
@@ -187,6 +263,10 @@ export default {
   pushOrder,
   registerCustomer,
   getCustomers,
+  getIngredients,
+  patchIngredient,
   registerUser,
   getUsers,
+  createIngredient,
+  deleteIngredient,
 };

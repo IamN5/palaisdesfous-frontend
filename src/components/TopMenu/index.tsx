@@ -20,6 +20,7 @@ const TopMenu: React.FC = () => {
     { label: 'Pedidos', auth: 'cook', url: '/pedidos' },
     { label: 'Clientes', auth: 'waiter', url: '/clientes' },
     { label: 'Funcionários', auth: 'admin', url: '/funcionarios' },
+    { label: 'Ingredientes', auth: 'admin', url: '/ingredientes' },
     {
       label: 'Logout',
       url: '/',
