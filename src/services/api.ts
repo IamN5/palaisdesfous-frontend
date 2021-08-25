@@ -5,6 +5,7 @@ import {
   IIngredient,
   IIngredientDto,
   IUser,
+  IProduct,
 } from '@interfaces/index';
 import axios from 'axios';
 import authService from './authService';
@@ -256,6 +257,40 @@ export const getUsers = async () => {
   return null;
 };
 
+export const registerProduct = async (
+  name: string,
+  price: number,
+  ingredients: IIngredient[]
+) => {
+  try {
+    const response = await api.post('/products/create', {
+      name,
+      price,
+      ingredients,
+    });
+    return response;
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      registerProduct(name, price, ingredients);
+    });
+  }
+  return null;
+};
+
+export const getProducts = async () => {
+  try {
+    const response = await api.get<IProduct[]>('/products/');
+    return response.data;
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      getUsers();
+    });
+  }
+  return null;
+};
+
 export default {
   api,
   getUserData,
@@ -269,4 +304,6 @@ export default {
   getUsers,
   createIngredient,
   deleteIngredient,
+  registerProduct,
+  getProducts,
 };

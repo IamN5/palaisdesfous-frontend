@@ -26,10 +26,14 @@ export interface IIngredientDto {
   quantity: number;
 }
 
+export interface IIngredientWrapper {
+  ingredient: IIngredient;
+  quantity: number;
+}
 export interface IProduct {
   name: string;
   price: number;
-  ingredients: IIngredient[];
+  ingredients: IIngredientWrapper[];
   quantity: number;
 }
 

@@ -4,6 +4,7 @@ import Ingredients from '@pages/Ingredients';
 import Login from '@pages/Login';
 import NotFound from '@pages/NotFound';
 import Orders from '@pages/Orders';
+import Products from '@pages/Products';
 import Users from '@pages/Users';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
@@ -30,6 +31,11 @@ const Routes: React.FC = () => {
       <AuthRoute path="/clientes">
         <Home>
           <Customer />
+        </Home>
+      </AuthRoute>
+      <AuthRoute path="/produtos">
+        <Home>
+          <Products />
         </Home>
       </AuthRoute>
       <AdminRoute path="/funcionarios">
