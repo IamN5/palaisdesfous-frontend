@@ -1,5 +1,6 @@
 import Customer from '@pages/Customer';
 import Home from '@pages/Home';
+import Ingredients from '@pages/Ingredients';
 import Login from '@pages/Login';
 import NotFound from '@pages/NotFound';
 import Orders from '@pages/Orders';
@@ -25,11 +26,16 @@ const Routes: React.FC = () => {
           <Orders />
         </Home>
       </AuthRoute>
-      <AuthRoute path="/cliente">
+      <AdminRoute path="/cliente">
         <Home>
           <Customer />
         </Home>
-      </AuthRoute>
+      </AdminRoute>
+      <AdminRoute path="/ingredientes">
+        <Home>
+          <Ingredients />
+        </Home>
+      </AdminRoute>
       <Route path="*">
         <NotFound />
       </Route>
