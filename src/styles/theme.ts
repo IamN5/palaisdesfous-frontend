@@ -10,6 +10,15 @@ const override: ThemeOverride = {
     body: 'Lato, sans-serif',
     heading: 'Roboto, sans-serif',
   },
+  components: {
+    Modal: {
+      baseStyle: () => ({
+        dialog: {
+          bg: '#3d3d3d',
+        },
+      }),
+    },
+  },
   colors: {
     gray: {
       50: '#f2f2f3',
