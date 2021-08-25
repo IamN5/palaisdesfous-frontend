@@ -185,6 +185,22 @@ export const patchIngredient = async (ingredient: IIngredient) => {
   return null;
 };
 
+export const createIngredient = async (ingredient: IIngredient) => {
+  try {
+    const response = await api.post(
+      'ingredients/create',
+      ingredientToDto(ingredient)
+    );
+
+    return ingredientFromDto(response.data);
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      createIngredient(ingredient);
+    });
+  }
+};
+
 export const registerUser = async (
   cpf: string,
   name: string,
@@ -234,4 +250,5 @@ export default {
   patchIngredient,
   registerUser,
   getUsers,
+  createIngredient,
 };
