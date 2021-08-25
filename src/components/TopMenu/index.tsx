@@ -13,11 +13,12 @@ interface IOption {
 }
 
 const TopMenu: React.FC = () => {
-  const { dispatch } = useUserContext();
+  const { state, dispatch } = useUserContext();
+  const { auth } = state;
 
   const options: Array<IOption> = [
-    { label: 'Pedidos', url: '/pedidos' },
-    { label: 'Cliente', url: '/cliente' },
+    { label: 'Pedidos', auth: 'cook', url: '/pedidos' },
+    { label: 'Cliente', auth: 'waiter', url: '/cliente' },
     { label: 'Funcionários', auth: 'admin', url: '/funcionarios' },
     {
       label: 'Logout',
@@ -51,20 +52,22 @@ const TopMenu: React.FC = () => {
         src={`${process.env.PUBLIC_URL}/crown.svg`}
       />
 
-      {options.map((item) => (
-        <Button
-          key={item.label}
-          bg="black.300"
-          marginRight="auto"
-          _hover={{ background: 'gray.400' }}
-          onClick={() => handleClick(item)}
-          textColor={
-            history.location.pathname === item.url ? 'orange.400' : 'white'
-          }
-        >
-          {item.label}
-        </Button>
-      ))}
+      {options.map((item) =>
+        !item.auth || item.auth?.match(auth) || auth.match('admin') ? (
+          <Button
+            key={item.label}
+            bg="black.300"
+            marginRight="auto"
+            _hover={{ background: 'gray.400' }}
+            onClick={() => handleClick(item)}
+            textColor={
+              history.location.pathname === item.url ? 'orange.400' : 'white'
+            }
+          >
+            {item.label}
+          </Button>
+        ) : null
+      )}
     </Flex>
   );
 };

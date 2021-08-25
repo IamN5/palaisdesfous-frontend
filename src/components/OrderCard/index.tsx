@@ -1,25 +1,45 @@
-import { Flex, Heading, ListItem, Text, UnorderedList } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Heading,
+  IconButton,
+  ListItem,
+  Text,
+  UnorderedList,
+} from '@chakra-ui/react';
 import React from 'react';
 import { IOrder } from '@interfaces/index';
 import { useDrag } from 'react-dnd';
 import { useOrdersContext } from '@context/ordersContext';
-import { pushOrder } from '@actions/orderActions';
+import { finishOrder, pushOrder } from '@actions/orderActions';
 import api from '@services/api';
 import useNotification from '@hooks/useNotification';
+import { CheckIcon } from '@chakra-ui/icons';
 
 interface IOrderCard {
   order: IOrder;
+  doneButton?: boolean;
 }
 
 interface IDroppable {
   droppable: boolean;
 }
 
-const OrderCard: React.FC<IOrderCard> = ({ order }) => {
+const OrderCard: React.FC<IOrderCard> = ({ order, doneButton = false }) => {
   const { state, dispatch } = useOrdersContext();
   const { createRequestError } = useNotification();
 
   const canDrag = !state.inProgressOrders.includes(order);
+
+  const clickDone = async () => {
+    try {
+      const response = await api.pushOrder(order);
+
+      if (response != null) dispatch(finishOrder({ order }));
+    } catch (error) {
+      createRequestError(error);
+    }
+  };
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'card',
@@ -73,10 +93,28 @@ const OrderCard: React.FC<IOrderCard> = ({ order }) => {
         ))}
       </UnorderedList>
 
-      <Text
-        fontSize="xx-small"
+      <Flex
         marginTop={2}
-      >{`customer.${order.customer.cpf}.${order.customer.name}`}</Text>
+        textAlign="center"
+        justifyContent="space-between"
+        w="100%"
+      >
+        <Text
+          alignSelf="flex-end"
+          fontSize="xx-small"
+          marginLeft="35%"
+        >{`customer.${order.customer.cpf}.${order.customer.name}`}</Text>
+        {doneButton && (
+          <IconButton
+            aria-label="Push to done"
+            colorScheme="green"
+            alignSelf="flex-end"
+            borderRadius="md"
+            onClick={clickDone}
+            icon={<CheckIcon />}
+          />
+        )}
+      </Flex>
     </Flex>
   );
 };

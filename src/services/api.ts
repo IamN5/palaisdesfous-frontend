@@ -88,9 +88,13 @@ export const pushOrder = async (order: IOrder) => {
 
   console.log(`Order status is ${order.status}`);
 
-  if (order.status !== OrderStatus.ToDo) return null;
+  if (order.status === OrderStatus.Done) return null;
 
-  newOrder.status = OrderStatus.InProgress;
+  if (newOrder.status === OrderStatus.InProgress) {
+    newOrder.status = OrderStatus.Done;
+  } else {
+    newOrder.status = OrderStatus.InProgress;
+  }
 
   try {
     const response = await api.patch(

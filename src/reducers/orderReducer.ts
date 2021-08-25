@@ -38,6 +38,16 @@ export const orderReducer = (
         ...state,
       };
     }
+    case actions.FINISH_ORDER: {
+      const { order } = action.payload;
+
+      const index = state.inProgressOrders.indexOf(order);
+      state.inProgressOrders.splice(index, 1);
+
+      return {
+        ...state,
+      };
+    }
     default:
       return { ...state };
   }
