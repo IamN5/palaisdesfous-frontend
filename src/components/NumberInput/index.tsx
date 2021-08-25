@@ -12,9 +12,17 @@ import { debounce } from 'lodash';
 type INumberInput = FlexProps & {
   value: number;
   setValue: (value: number) => void;
+  debounceDelay?: number;
+  shouldDebounce?: boolean;
 };
 
-const NumberInput: React.FC<INumberInput> = ({ value, setValue, ...props }) => {
+const NumberInput: React.FC<INumberInput> = ({
+  value,
+  setValue,
+  debounceDelay,
+  shouldDebounce = true,
+  ...props
+}) => {
   const addIcon = useMemo(() => <AddIcon color="orange.400" />, []);
   const minusIcon = useMemo(() => <MinusIcon color="orange.400" />, []);
 
@@ -23,7 +31,7 @@ const NumberInput: React.FC<INumberInput> = ({ value, setValue, ...props }) => {
   };
 
   const debounceChangeHandler = useMemo(
-    () => debounce(changeHandler, 1000),
+    () => debounce(changeHandler, debounceDelay || 1000),
     [setValue]
   );
 
@@ -37,7 +45,7 @@ const NumberInput: React.FC<INumberInput> = ({ value, setValue, ...props }) => {
       defaultValue: value,
       min: 0,
       precision: 0,
-      onChange: debounceChangeHandler,
+      onChange: shouldDebounce ? debounceChangeHandler : changeHandler,
       focusInputOnChange: false,
     });
 

@@ -1,13 +1,14 @@
-import { Flex, Heading } from '@chakra-ui/react';
+import { CloseButton, Flex, Heading } from '@chakra-ui/react';
 import { BackgroundProps, FlexboxProps } from '@chakra-ui/system';
 import React from 'react';
 
 type ICard = BackgroundProps &
   FlexboxProps & {
     title: string;
+    onClose?: () => void;
   };
 
-const Card: React.FC<ICard> = ({ title, children, ...props }) => {
+const Card: React.FC<ICard> = ({ title, children, onClose, ...props }) => {
   return (
     <Flex
       minH="7rem"
@@ -21,6 +22,9 @@ const Card: React.FC<ICard> = ({ title, children, ...props }) => {
       bg="orange.400"
       {...props}
     >
+      {onClose && (
+        <CloseButton alignSelf="flex-end" size="sm" onClick={onClose} />
+      )}
       <Heading
         textTransform="capitalize"
         marginTop={2}

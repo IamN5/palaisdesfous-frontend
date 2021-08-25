@@ -199,6 +199,23 @@ export const createIngredient = async (ingredient: IIngredient) => {
       createIngredient(ingredient);
     });
   }
+
+  return null;
+};
+
+export const deleteIngredient = async (ingredient: IIngredient) => {
+  try {
+    const response = await api.delete(`/ingredients/delete/${ingredient.name}`);
+
+    return ingredientFromDto(response.data);
+  } catch (error) {
+    handleError(error, () => {
+      tryAndRefreshToken();
+      createIngredient(ingredient);
+    });
+  }
+
+  return null;
 };
 
 export const registerUser = async (
@@ -251,4 +268,5 @@ export default {
   registerUser,
   getUsers,
   createIngredient,
+  deleteIngredient,
 };
