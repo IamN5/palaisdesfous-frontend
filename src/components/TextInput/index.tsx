@@ -6,6 +6,7 @@ interface ITextInput {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   placeholder: string;
   icon?: ReactElement;
+  width?: string;
 }
 
 const TextInput: React.FC<ITextInput> = ({
@@ -13,9 +14,10 @@ const TextInput: React.FC<ITextInput> = ({
   value,
   setValue,
   placeholder,
+  width,
 }) => {
   return (
-    <InputGroup width="70%" _focusWithin={{ color: '#ED8936' }}>
+    <InputGroup width={width || '70%'} _focusWithin={{ color: '#ED8936' }}>
       {icon && (
         <InputLeftElement height="100%" pointerEvents="none" children={icon} />
       )}
